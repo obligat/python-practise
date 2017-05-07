@@ -12,4 +12,4 @@ def computeNearestNeighbor(username, users):
     return distances
 
 
-print computeNearestNeighbor("Angelica", manhattan.users)
+# print computeNearestNeighbor("Angelica", manhattan.users)

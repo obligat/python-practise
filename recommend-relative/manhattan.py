@@ -27,5 +27,5 @@ def manhattan(rating1, rating2):
     return distance
 
 
-print manhattan(users['Hailey'], users['Chan'])
-print manhattan(users['Veronica'], users['Angelica'])
+# print manhattan(users['Hailey'], users['Chan'])
+# print manhattan(users['Veronica'], users['Angelica'])
