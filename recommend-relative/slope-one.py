@@ -1,8 +1,52 @@
 # coding=utf-8
+import codecs
+
 users = {"Amy": {"Taylor Swift": 4, "PSY": 3, "Whitney Houston": 4},
          "Ben": {"Taylor Swift": 5, "PSY": 2},
          "Clara": {"PSY": 3.5, "Whitney Houston": 4},
          "Daisy": {"Taylor Swift": 5, "Whitney Houston": 3}}
+
+myScore = {'Snakes on a Plane': 3.0, 'Forest Gump': 5.0, 'Jaws': 1.0, 'Napolean Dynamite': 3.0, 'Toy Story': 4.0}
+
+
+def loadMovieDB(path=''):
+    data = {}
+    user_rating = {}
+    i = 0
+    f = codecs.open(path + "Movie_Ratings.csv", )
+    for line in f:
+        i = i + 1
+        if i == 1:
+            lists = line.split(',')
+            lists.pop(0)
+            user_ids = []
+            for user in lists:
+                user = user.strip('"').strip('"\n')
+                user_ids.append(user)
+                user_rating[user] = {}
+        else:
+            next_line = line.split(',')
+            movie_name = next_line.pop(0).strip('"')
+            scores = {}
+            array = []
+            for k in next_line:
+                k = k.strip().strip('\n')
+                array.append(k)
+            scores[movie_name] = array
+            for n in user_ids:
+                index = user_ids.index(n)
+                if scores[movie_name][index] == '':
+                    continue
+                else:
+                    user_rating[n].update({movie_name: float(scores[movie_name][index])})
+                    data[n] = user_rating[n]
+    f.close()
+    return data
+
+
+data = loadMovieDB('/home/dujinqiao/Documents/python-practise/')
+
+print data
 
 
 class Recommender:
@@ -65,11 +109,17 @@ class Recommender:
                     #  recommendations[diffItem] = 分子   requencies[diffItem] = 分母
                     recommendations[diffItem] += (diffRatings[userItem] + userRating) * freq
                     frequencies[diffItem] += freq
-        # recommendations = [(self.convertProductID2name(k),
-        #                     v / frequencies[k])
-        #                    for (k, v) in recommendations.items()
+        # 计算出最后得分
+        for (item, value) in recommendations.items():
+            recommendations[item] = value / frequencies[item]
+            print recommendations
+        return recommendations
 
+#
+# r = Recommender(users)
+# userRating = users['Ben']
+# recommend = r.slopeOneRecommendations(userRating)
 
-r = Recommender(users)
-r.computeDeviations()
-print (r.deviations)
+my = Recommender(data)
+myRecommend = my.slopeOneRecommendations(myScore)
+print myRecommend
