@@ -54,21 +54,20 @@ class Recommender:
         self.data = data
         self.frequencies = {}
         self.deviations = {}
-        pass
 
     # 计算偏差
     def computeDeviations(self):
         # 遍历每个用户对乐队的打分信息
         for ratings in self.data.values():
-            print ratings
+            # print ratings
             # 遍历乐队中的每支乐队
             for (item, rating) in ratings.items():
                 # 给字典 frequencies deviations中添加项
                 # 如果没有这个乐队名，给 frequencies 添加 frequencies = {乐队名：{}}，同理， deviations = {乐队名：{}}
                 self.frequencies.setdefault(item, {})
                 self.deviations.setdefault(item, {})
-                print self.frequencies
-                print self.deviations
+                # print self.frequencies
+                # print self.deviations
                 # 遍历乐队中的每支乐队
                 for (item2, rating2) in ratings.items():
                     # 如果这次遍历的乐队名不是外层的乐队名，依次计算与外层乐队名的偏差
@@ -76,15 +75,14 @@ class Recommender:
                         # 如果 frequencies[乐队名]={}， 将 frequencies[乐队名]={乐队名2:0}
                         # 同理， deviations[乐队名] = {乐队名2:0.0}
                         self.frequencies[item].setdefault(item2, 0)
-                        print self.frequencies
+                        # print self.frequencies
                         self.deviations[item].setdefault(item2, 0.0)
-                        print self.deviations
+                        # print self.deviations
                         # 如果 frequencies[乐队名]！={}，也就是说，以后依次遍历乐队名时，将 item2 的值累加
                         self.frequencies[item][item2] += 1
-                        print self.frequencies
+                        # print self.frequencies
                         self.deviations[item][item2] += rating - rating2
-                        print self.deviations
-
+                        # print self.deviations
         # 遍历 deviations 字典，deviations = {item:{item2:偏差之和}}，
         # frequencies = {item: {item2: 共同对 item item2 打分的用户数}}
         for (item, ratings) in self.deviations.items():
@@ -112,8 +110,10 @@ class Recommender:
         # 计算出最后得分
         for (item, value) in recommendations.items():
             recommendations[item] = value / frequencies[item]
-            print recommendations
-        return recommendations
+            # print recommendations
+
+        return sorted(recommendations.items(), key=lambda d: d[1], reverse=True)
+
 
 #
 # r = Recommender(users)
@@ -121,5 +121,9 @@ class Recommender:
 # recommend = r.slopeOneRecommendations(userRating)
 
 my = Recommender(data)
+print my.computeDeviations()
 myRecommend = my.slopeOneRecommendations(myScore)
 print myRecommend
+
+# 最终推荐的影片[('Star Wars', 4.494623655913978), ('Shawshank Redemption', 4.42),
+#  ('The Dark Knight', 4.375), ('The Matrix', 4.021505376344086), ('Gladiator', 3.8701298701298703)]
